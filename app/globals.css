@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #7c3aed;
+  --color-primary-dark: #5b21b6;
+  --color-primary-light: #a78bfa;
+
+  --color-accent-orange: #f97316;
+  --color-accent-gold: #eab308;
+  --color-accent-aqua: #14b8a6;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+html.dark body {
+  background-color: #0f0f14;
+  color: #e5e7eb;
+}

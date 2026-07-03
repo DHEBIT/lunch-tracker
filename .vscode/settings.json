@@ -1,0 +1,8 @@
+{
+  "css.validate": false,
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+},
+"liveServer.settings.multiRootWorkspaceName": "lunch-tracker"
+}
