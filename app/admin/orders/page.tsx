@@ -110,19 +110,23 @@ export default async function AdminOrdersPage({
           </Link>
         </div>
 
-        {/* Stat cards */}
-        <div className="grid grid-cols-2 gap-4 mb-8 max-w-md">
-          <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-5 border-l-4 border-l-primary">
-            <p className="text-sm text-gray-500 dark:text-zinc-400 font-medium">Total orders</p>
-            <p className="text-3xl font-black text-gray-900 dark:text-zinc-50 mt-1">{totalOrders}</p>
-          </div>
-          <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-5 border-l-4 border-l-accent-orange">
-            <p className="text-sm text-gray-500 dark:text-zinc-400 font-medium">Total cost</p>
-            <p className="text-3xl font-black text-accent-orange mt-1">
-              {totalCost} <span className="text-base font-semibold text-gray-400 dark:text-zinc-500">GHS</span>
-            </p>
-          </div>
-        </div>
+       {/* Stat cards */}
+<div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+  <div className="rounded-2xl p-5 bg-primary shadow-md shadow-primary/20">
+    <p className="text-xs font-semibold text-white/70 uppercase tracking-wide">Total orders</p>
+    <p className="text-3xl font-black text-white mt-1">{totalOrders}</p>
+  </div>
+  <div className="rounded-2xl p-5 bg-accent-orange shadow-md shadow-accent-orange/20">
+    <p className="text-xs font-semibold text-white/70 uppercase tracking-wide">Total cost</p>
+    <p className="text-3xl font-black text-white mt-1">
+      {totalCost} <span className="text-base font-semibold text-white/70">GHS</span>
+    </p>
+  </div>
+  <div className="rounded-2xl p-5 bg-accent-aqua shadow-md shadow-accent-aqua/20 col-span-2 sm:col-span-1">
+    <p className="text-xs font-semibold text-white/70 uppercase tracking-wide">Employees ordered</p>
+    <p className="text-3xl font-black text-white mt-1">{users.length}</p>
+  </div>
+</div>
 
         {users.length === 0 ? (
           <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-10 text-center">

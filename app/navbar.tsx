@@ -21,15 +21,15 @@ export default function Navbar() {
   const linkClass = (href: string) =>
     `relative px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-150 ${
       pathname === href
-        ? "bg-primary text-white shadow-sm shadow-primary/30"
-        : "text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white"
+        ? "bg-white text-primary shadow-sm"
+        : "text-white/80 hover:bg-white/10 hover:text-white"
     }`
 
   const mobileLinkClass = (href: string) =>
     `block px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
       pathname === href
-        ? "bg-primary text-white"
-        : "text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        ? "bg-white text-primary"
+        : "text-white/90 hover:bg-white/10"
     }`
 
   const initials = (session.user.name || session.user.email || "?")
@@ -82,16 +82,15 @@ export default function Navbar() {
   )
 
   return (
-    <nav className="sticky top-0 z-20 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md shadow-sm">
+    <nav className="sticky top-0 z-20 bg-primary shadow-md">
       <div className="max-w-5xl mx-auto px-4 flex items-center justify-between gap-2 h-16">
         {/* Logo */}
         <Link href="/menu" className="flex items-center gap-2 shrink-0">
-          <span className="w-8 h-8 rounded-lg bg-linear-to-br from-primary via-accent-orange to-accent-gold flex items-center justify-center text-white text-sm font-black shadow-sm">
+          <span className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center text-white text-sm font-black backdrop-blur-sm">
             H
           </span>
-          <span className="text-lg font-extrabold tracking-tight">
-            <span className="text-primary">HAPPY</span>{" "}
-            <span className="text-accent-orange">HOUR</span>
+          <span className="text-lg font-extrabold tracking-tight text-white">
+            HAPPY <span className="text-accent-gold">HOUR</span>
           </span>
         </Link>
 
@@ -100,17 +99,21 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-1.5">
-          <ThemeToggle />
-          <NotificationBell />
+          <div className="text-white [&_button]:text-white/90 [&_button:hover]:text-white [&_button:hover]:bg-white/10">
+            <ThemeToggle />
+          </div>
+          <div className="text-white [&_button]:text-white/90 [&_button:hover]:text-white [&_button:hover]:bg-white/10">
+            <NotificationBell />
+          </div>
 
           {/* User chip - desktop only */}
-          <div className="hidden md:flex items-center gap-2 pl-2 ml-1 border-l border-zinc-200 dark:border-zinc-700">
-            <div className="w-8 h-8 rounded-full bg-linear-to-br from-accent-aqua to-primary flex items-center justify-center text-white text-xs font-bold">
+          <div className="hidden md:flex items-center gap-2 pl-2 ml-1 border-l border-white/20">
+            <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-white text-xs font-bold backdrop-blur-sm">
               {initials}
             </div>
             <button
               onClick={() => signOut({ callbackUrl: "/signin" })}
-              className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-primary transition-colors"
+              className="text-xs font-semibold text-white/80 hover:text-white transition-colors"
             >
               Sign out
             </button>
@@ -119,7 +122,7 @@ export default function Navbar() {
           {/* Mobile toggle */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            className="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
             aria-label="Toggle menu"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -134,21 +137,21 @@ export default function Navbar() {
       </div>
 
       {/* Brand accent stripe */}
-      <div className="h-0.75 w-full bg-linear-to-r from-primary via-accent-orange to-accent-gold" />
+      <div className="h-0.75 w-full bg-linear-to-r from-accent-orange via-accent-gold to-accent-aqua" />
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 px-4 py-3 space-y-1 bg-white dark:bg-zinc-900">
+        <div className="md:hidden border-t border-white/10 px-4 py-3 space-y-1 bg-primary-dark">
           {mobileLinks}
-          <div className="pt-3 mt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center gap-3 px-3">
-            <div className="w-8 h-8 rounded-full bg-linear-to-br from-accent-aqua to-primary flex items-center justify-center text-white text-xs font-bold shrink-0">
+          <div className="pt-3 mt-2 border-t border-white/10 flex items-center gap-3 px-3">
+            <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-white text-xs font-bold shrink-0 backdrop-blur-sm">
               {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100 truncate">{session.user.name}</p>
+              <p className="text-sm font-medium text-white truncate">{session.user.name}</p>
               <button
                 onClick={() => signOut({ callbackUrl: "/signin" })}
-                className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 hover:text-primary transition-colors"
+                className="text-xs font-semibold text-white/80 hover:text-white transition-colors"
               >
                 Sign out
               </button>

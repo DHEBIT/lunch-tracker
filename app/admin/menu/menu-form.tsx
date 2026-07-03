@@ -116,6 +116,21 @@ export default function MenuForm() {
       <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-5 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
+            {/* Bold stat row */}
+     <div className="grid grid-cols-3 gap-3 mb-6">
+         <div className="rounded-xl p-4 bg-primary shadow-sm shadow-primary/20">
+      <p className="text-[10px] font-semibold text-white/70 uppercase tracking-wide">Complete</p>
+    <p className="text-2xl font-black text-white mt-0.5">{fullyFilledDays}</p>
+          </div>
+          <div className="rounded-xl p-4 bg-accent-gold shadow-sm shadow-accent-gold/20">
+         <p className="text-[10px] font-semibold text-white/70 uppercase tracking-wide">In progress</p>
+            <p className="text-2xl font-black text-white mt-0.5">{filledDays - fullyFilledDays}</p>
+            </div>
+               <div className="rounded-xl p-4 bg-gray-300 dark:bg-zinc-700 shadow-sm">
+                 <p className="text-[10px] font-semibold text-white/80 uppercase tracking-wide">Remaining</p>
+              <p className="text-2xl font-black text-white mt-0.5">{DAYS.length - filledDays}</p>
+        </div>
+               </div>
             <p className="text-xs font-semibold text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-0.5">
               Week of
             </p>
