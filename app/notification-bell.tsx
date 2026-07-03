@@ -50,6 +50,22 @@ export default function NotificationBell() {
     }
   }
 
+  async function handleDeleteOne(id: string, e: React.MouseEvent) {
+    e.stopPropagation()
+    setNotifications((prev) => prev.filter((n) => n.id !== id))
+    await fetch("/api/notifications", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    })
+  }
+
+  async function handleClearAll() {
+    setNotifications([])
+    setUnreadCount(0)
+    await fetch("/api/notifications", { method: "DELETE" })
+  }
+
   function timeAgo(dateStr: string) {
     const diff = Date.now() - new Date(dateStr).getTime()
     const mins = Math.floor(diff / 60000)
@@ -81,8 +97,16 @@ export default function NotificationBell() {
 
       {open && (
         <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg shadow-lg z-30">
-          <div className="px-4 py-3 border-b border-gray-100 dark:border-zinc-800">
+          <div className="px-4 py-3 border-b border-gray-100 dark:border-zinc-800 flex items-center justify-between">
             <p className="font-semibold text-gray-900 dark:text-gray-100">Notifications</p>
+            {notifications.length > 0 && (
+              <button
+                onClick={handleClearAll}
+                className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+              >
+                Clear all
+              </button>
+            )}
           </div>
 
           {notifications.length === 0 ? (
@@ -92,11 +116,18 @@ export default function NotificationBell() {
               {notifications.map((n) => (
                 <div
                   key={n.id}
-                  className={`px-4 py-3 text-sm ${
+                  className={`px-4 py-3 text-sm group relative ${
                     !n.read ? "bg-primary/5" : ""
                   }`}
                 >
-                  <p className="text-gray-800 dark:text-gray-200">{n.message}</p>
+                  <button
+                    onClick={(e) => handleDeleteOne(n.id, e)}
+                    className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center rounded text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 opacity-0 group-hover:opacity-100 transition-opacity"
+                    aria-label="Dismiss notification"
+                  >
+                    ×
+                  </button>
+                  <p className="text-gray-800 dark:text-gray-200 pr-5">{n.message}</p>
                   <p className="text-xs text-gray-400 mt-1">{timeAgo(n.createdAt)}</p>
                 </div>
               ))}
