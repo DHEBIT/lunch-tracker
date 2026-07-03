@@ -28,6 +28,10 @@ export default function MenuForm() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
 
+  const [resetting, setResetting] = useState(false)
+  const [confirmingReset, setConfirmingReset] = useState(false)
+  const [resetMessage, setResetMessage] = useState("")
+
   const monday = getMonday(new Date())
 
   const [options, setOptions] = useState(
@@ -79,85 +83,142 @@ export default function MenuForm() {
     }
   }
 
+  async function handleReset() {
+    setResetting(true)
+    setResetMessage("")
+
+    const res = await fetch("/api/admin/menu/reset", { method: "POST" })
+
+    setResetting(false)
+    setConfirmingReset(false)
+
+    if (res.ok) {
+      setResetMessage("This week's menu and any orders for it were cleared.")
+      setOptions(DAYS.map(() => ({ optionA: "", optionB: "" })))
+      router.refresh()
+    } else {
+      setResetMessage("Something went wrong while clearing the menu.")
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">
-          {error}
-        </div>
-      )}
-      {success && (
-        <div className="bg-accent-aqua/10 border border-accent-aqua text-gray-800 text-sm rounded-lg px-4 py-3 mb-4 flex items-center gap-2">
-          <span className="text-accent-aqua font-bold">✓</span>
-          Menu uploaded successfully!
+    <div>
+      {resetMessage && (
+        <div className="bg-accent-gold/10 border border-accent-gold text-gray-800 text-sm rounded-lg px-4 py-3 mb-4">
+          {resetMessage}
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-gray-500">
-          Week of {monday.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-        </p>
-        <p className="text-sm text-gray-500">
-          {filledDays} of {DAYS.length} days filled
-        </p>
+      <div className="flex justify-end mb-4">
+        {confirmingReset ? (
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-gray-600">Clear this week&apos;s menu and orders?</span>
+            <button
+              type="button"
+              onClick={handleReset}
+              disabled={resetting}
+              className="text-red-600 font-semibold hover:underline disabled:opacity-50"
+            >
+              {resetting ? "Clearing..." : "Yes, clear it"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmingReset(false)}
+              className="text-gray-500 hover:underline"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setConfirmingReset(true)}
+            className="text-sm text-red-600 hover:underline"
+          >
+            Clear this week&apos;s menu
+          </button>
+        )}
       </div>
 
-      <div className="space-y-4">
-        {DAYS.map((day, index) => {
-          const date = new Date(monday)
-          date.setDate(monday.getDate() + index)
-          const accent = DAY_ACCENTS[day]
+      <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="bg-accent-aqua/10 border border-accent-aqua text-gray-800 text-sm rounded-lg px-4 py-3 mb-4 flex items-center gap-2">
+            <span className="text-accent-aqua font-bold">✓</span>
+            Menu uploaded successfully!
+          </div>
+        )}
 
-          return (
-            <div
-              key={day}
-              className={`bg-white rounded-lg shadow border-l-4 ${accent} p-5`}
-            >
-              <h3 className="font-bold text-gray-900 mb-3">
-                {day}
-                <span className="text-gray-400 font-normal text-sm ml-2">
-                  {date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                </span>
-              </h3>
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm text-gray-500">
+            Week of {monday.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+          </p>
+          <p className="text-sm text-gray-500">
+            {filledDays} of {DAYS.length} days filled
+          </p>
+        </div>
 
-              <div className="grid sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
-                    Option A
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Jollof rice with chicken"
-                    value={options[index].optionA}
-                    onChange={(e) => updateOption(index, "optionA", e.target.value)}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
-                    Option B
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Banku with okra stew"
-                    value={options[index].optionB}
-                    onChange={(e) => updateOption(index, "optionB", e.target.value)}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
+        <div className="space-y-4">
+          {DAYS.map((day, index) => {
+            const date = new Date(monday)
+            date.setDate(monday.getDate() + index)
+            const accent = DAY_ACCENTS[day]
+
+            return (
+              <div
+                key={day}
+                className={`bg-white rounded-lg shadow border-l-4 ${accent} p-5`}
+              >
+                <h3 className="font-bold text-gray-900 mb-3">
+                  {day}
+                  <span className="text-gray-400 font-normal text-sm ml-2">
+                    {date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  </span>
+                </h3>
+
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
+                      Option A
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Jollof rice with chicken"
+                      value={options[index].optionA}
+                      onChange={(e) => updateOption(index, "optionA", e.target.value)}
+                      className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
+                      Option B
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Banku with okra stew"
+                      value={options[index].optionB}
+                      onChange={(e) => updateOption(index, "optionB", e.target.value)}
+                      className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full mt-6 bg-primary text-white rounded-lg px-3 py-3 hover:bg-primary-dark font-semibold transition-colors disabled:opacity-50"
-      >
-        {loading ? "Uploading..." : "Upload Menu"}
-      </button>
-    </form>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full mt-6 bg-primary text-white rounded-lg px-3 py-3 hover:bg-primary-dark font-semibold transition-colors disabled:opacity-50"
+        >
+          {loading ? "Uploading..." : "Upload Menu"}
+        </button>
+      </form>
+    </div>
   )
 }

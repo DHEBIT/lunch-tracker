@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
 import ThemeToggle from "./theme-toggle"
+import NotificationBell from "./notification-bell"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
@@ -37,6 +38,9 @@ export default function Navbar() {
           <Link href="/admin/orders" className={linkClass("/admin/orders")} onClick={() => setMenuOpen(false)}>
             Orders
           </Link>
+          <Link href="/admin/caterer" className={linkClass("/admin/caterer")}>
+           Caterer Sheet
+          </Link>
         </>
       )}
     </>
@@ -53,7 +57,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-2">{links}</div>
           <ThemeToggle />
-
+          <NotificationBell />
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden p-2 rounded hover:bg-gray-100 dark:hover:bg-zinc-800"
