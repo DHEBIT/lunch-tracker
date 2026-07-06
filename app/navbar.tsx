@@ -77,8 +77,11 @@ export default function Navbar() {
             Orders
           </Link>
           <Link href="/admin/caterer" className={mobileLinkClass("/admin/caterer")} onClick={() => setMenuOpen(false)}>
-            Caterer Sheet
+              Caterer Sheet
           </Link>
+          <Link href="/admin/employees" className={mobileLinkClass("/admin/employees")} onClick={() => setMenuOpen(false)}>
+               Employees
+           </Link>
         </>
       )}
     </>
