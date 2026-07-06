@@ -29,26 +29,30 @@ export async function GET(req: Request) {
     .map((d: unknown) => new Date(d as string))
     .sort((a, b) => a.getTime() - b.getTime())
 
-  const userMap = new Map<string, { name: string; ordersByDay: Set<string> }>()
+  const userMap = new Map<string, { name: string; department: string | null; ordersByDay: Set<string> }>()
   for (const order of orders) {
     if (!userMap.has(order.userId)) {
-      userMap.set(order.userId, { name: order.user.name, ordersByDay: new Set() })
+      userMap.set(order.userId, {
+        name: order.user.name,
+        department: order.user.department,
+        ordersByDay: new Set(),
+      })
     }
     userMap.get(order.userId)!.ordersByDay.add(order.date.toDateString())
   }
 
   const dayLabels = days.map((d) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" }))
-  const header = ["Name", ...dayLabels, "Total Meals", "Cost (GHS)"]
+  const header = ["Name", "Department", ...dayLabels, "Total Meals", "Cost (GHS)"]
 
   const rows = Array.from(userMap.values()).map((user) => {
-    const cells = days.map((day) => (user.ordersByDay.has(day.toDateString()) ? "1" : "0"))
+    const cells = days.map((day) => (user.ordersByDay.has(day.toDateString()) ? "1" : "N/A"))
     const total = user.ordersByDay.size
-    return [user.name, ...cells, String(total), String(total * COST_PER_MEAL)]
+    return [user.name, user.department || "N/A", ...cells, String(total), String(total * COST_PER_MEAL)]
   })
 
   const totalMeals = rows.reduce((sum, r) => sum + Number(r[r.length - 2]), 0)
   const totalCost = totalMeals * COST_PER_MEAL
-  rows.push(["TOTAL", ...days.map(() => ""), String(totalMeals), String(totalCost)])
+  rows.push(["TOTAL", "", ...days.map(() => ""), String(totalMeals), String(totalCost)])
 
   const csv = [header, ...rows].map((r) => r.join(",")).join("\n")
 
