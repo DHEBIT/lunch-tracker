@@ -54,6 +54,9 @@ export default function Navbar() {
           </Link>
           <Link href="/admin/caterer" className={linkClass("/admin/caterer")} onClick={() => setMenuOpen(false)}>
             Caterer Sheet
+            <Link href="/admin/employees" className={linkClass("/admin/employees")} onClick={() => setMenuOpen(false)}>
+              Employees
+               </Link>
           </Link>
         </>
       )}

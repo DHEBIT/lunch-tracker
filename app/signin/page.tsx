@@ -95,6 +95,12 @@ export default function SignInPage() {
             </button>
           </div>
 
+          <p className="text-right text-xs text-gray-500 dark:text-gray-400 mb-4 -mt-2">
+            <Link href="/forgot-password" className="text-primary hover:underline">
+              Forgot password?
+            </Link>
+          </p>
+
           <button
             type="submit"
             className="w-full bg-primary text-white rounded px-3 py-2 hover:bg-primary-dark font-semibold transition-colors"

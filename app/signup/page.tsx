@@ -9,6 +9,7 @@ export default function SignUpPage() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [department, setDepartment] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
 
@@ -19,7 +20,7 @@ export default function SignUpPage() {
     const res = await fetch("/api/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, password, department }),
     })
 
     if (res.ok) {
@@ -66,6 +67,13 @@ export default function SignUpPage() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded border border-gray-300 bg-white px-3 py-2 mb-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:border-zinc-700 dark:bg-zinc-950 dark:text-gray-100 dark:placeholder-gray-500"
             required
+          />
+          <input
+            type="text"
+            placeholder="Department (e.g. Finance, Underwriting)"
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+            className="w-full rounded border border-gray-300 bg-white px-3 py-2 mb-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:border-zinc-700 dark:bg-zinc-950 dark:text-gray-100 dark:placeholder-gray-500"
           />
           <div className="relative mb-4">
             <input
